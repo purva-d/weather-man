@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Man - Home</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h2 style="text-align:center;">Weather Man</h2>
+    <button type="button" onclick="getData()"style="height:50px;width:100px" >Show!</button>
+    <br/><br/>
+    <canvas id="myChart" style="width:100%;max-width:800px;height: 500px;"></canvas>
+
+<script>
+var xValues = [];
+var yValues = [];
+
+function getData(){
+    $.ajax({
+            type: 'GET',
+            url: "/getWeatherData/?city",
+            success:function(data){
+                console.log(data)
+                xValues1 = Object.keys(data)
+                xValues=[]
+                for(let i=0;i<xValues1.length ;i++){
+                    //console.log(parseInt (xValues1[i]))
+                    xValues[i] = new Date((parseInt (xValues1[i]))).toLocaleDateString()
+                }
+                yValues= Object.values(data)
+                new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                fill: false,
+                lineTension: 0,
+                backgroundColor: "rgba(0,0,255,1.0)",
+                borderColor: "rgba(0,0,255,0.1)",
+                data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                yAxes: [{ticks: {min: 250, max:350}}],
+                }
+            }
+            });
+               
+            }
+        });
+}
+</script>
+</body>
+</html>
